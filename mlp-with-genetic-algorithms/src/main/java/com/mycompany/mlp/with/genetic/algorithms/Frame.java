@@ -16,7 +16,9 @@ import javax.swing.JLabel;
 
 public class Frame extends JFrame {
     private final String HOME_PAGE = "<html><h2>Home page</h2></html>";
-    private final String ABOUT_PAGE = "<html><h2>About page</h2></html>";
+    private final String ABOUT_PAGE = "<html><h2>About page</h2>"
+            + "<br><br><br><br><br><br><br><br>"
+            + "Last execute with: <br><br>JAVA v.24<br>Apache NetBeans IDE 25</html>";
     private final String SOMETHING_WRONG = "<html><h2>Something went wrong..</h2></html>";
     private final String LOAD_TRAIN_DATASET = "<html><h2>Loading dataset..</h2></html>";
     private final String LOAD_CUSTOM_TRAIN_DATASET = "<html><h2>Loading train dataset..</h2></html>";
