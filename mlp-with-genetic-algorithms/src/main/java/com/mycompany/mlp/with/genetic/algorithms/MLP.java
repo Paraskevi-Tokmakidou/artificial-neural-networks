@@ -4,11 +4,10 @@ package com.mycompany.mlp.with.genetic.algorithms;
  *
  * @author Paraskevi Tokmakidou
  */
-
 import java.util.ArrayList;
-import java.util.Random;
 
 public class MLP {
+
     private final ArrayList<ArrayList<Double>> _patterns;
     private ArrayList<Double> _uniqueOutputClasses;
     private ArrayList<Double> _weights;
@@ -34,17 +33,6 @@ public class MLP {
         System.out.println("Nodes: " + this._nodes);
     }
 
-    private void initializeRandomWeights(Integer countOfWeightsDimension) {
-        Random random = new Random();
-        Double min = MlpConfig.getMin_value();
-        Double max = MlpConfig.getMax_value();
-
-        for (int i = 0; i < countOfWeightsDimension; i++) {
-            Double randomValue = min + (max - min) * random.nextDouble(); // [min, max]
-            this._weights.add(randomValue);
-        }
-    }
-
     public void initializeWeights(Boolean geneticOption, GENETIC_CROSSOVER_OPTIONS geneticCrossoverOption) {
         int countOfWeightsDimension = (this._dimension + 2) * this._nodes;
         System.out.println("Count of weights: " + countOfWeightsDimension);
@@ -53,7 +41,8 @@ public class MLP {
             GeneticAlgorithm ga = new GeneticAlgorithm(countOfWeightsDimension, geneticCrossoverOption);
             this._weights = ga.getBestChromosome();
         } else {
-            this.initializeRandomWeights(countOfWeightsDimension);
+            this._weights = RandomValues.returnArrayOfDoubleValues(MlpConfig.getMin_value(), MlpConfig.getMax_value(),
+                    countOfWeightsDimension);
         }
     }
 

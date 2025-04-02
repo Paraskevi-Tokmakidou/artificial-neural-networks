@@ -7,7 +7,6 @@ package com.mycompany.mlp.with.genetic.algorithms;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 public class GeneticAlgorithm {
     private ArrayList<ArrayList<Double>> _population;
@@ -21,11 +20,9 @@ public class GeneticAlgorithm {
     private final int _elitismCountOfChromosomesThatPassToNextEpoch;
     private final boolean _wantToDisplayTrainErrorInEachEpoch;
     private final GENETIC_CROSSOVER_OPTIONS _crossoverOption;
-    private Random random;
     private MLP mlp;
 
     GeneticAlgorithm(int dimension, GENETIC_CROSSOVER_OPTIONS geneticCrossoverOption) {
-        this.random = new Random();
         this._countOfPopulation = GaConfig.getCount_of_population();
         this._maxEpochs = GaConfig.getMax_epoches();
         this._crossoverRatio = GaConfig.getCrossoverRatio();
@@ -43,15 +40,10 @@ public class GeneticAlgorithm {
     private void randomInitializationGenes() {
         this._population = new ArrayList<>();
 
-        Double min = GaConfig.getMin_value();
-        Double max = GaConfig.getMax_value();
-
         for (int i = 0; i < this._countOfPopulation; i++) {
-            ArrayList<Double> tempChromosome = new ArrayList<>();
-            for (int j = 0; j < this._countGenesOfChromosome; j++) {
-                Double randomValue = min + (max - min) * this.random.nextDouble(); // [min, max]
-                tempChromosome.add(randomValue);
-            }
+            ArrayList<Double> tempChromosome = new ArrayList<>(
+                    RandomValues.returnArrayOfDoubleValues(GaConfig.getMin_value(), GaConfig.getMax_value(),
+                            this._countGenesOfChromosome));
 
             // Default values for future usage
             tempChromosome.addAll(Collections.nCopies(3, -999.999));
@@ -133,12 +125,12 @@ public class GeneticAlgorithm {
 
     private void crossover(ArrayList<Double> parent1, ArrayList<Double> parent2) {
         // 0 - count genes Of chromosome
-        int randomGenePosition = this.random.nextInt(this._countGenesOfChromosome - 1) + 1;
+        int randomGenePosition = RandomValues.returnRandomInteger(this._countGenesOfChromosome);
 
         int secondRandomGenePosition;
         do {
             // 0 - count genes Of chromosome
-            secondRandomGenePosition = this.random.nextInt(this._countGenesOfChromosome - 1) + 1;
+            secondRandomGenePosition = RandomValues.returnRandomInteger(this._countGenesOfChromosome);
         } while (secondRandomGenePosition == randomGenePosition);
 
         if (secondRandomGenePosition < randomGenePosition) {
@@ -200,7 +192,7 @@ public class GeneticAlgorithm {
             ArrayList<ArrayList<Double>> tempChromosomes = new ArrayList<>();
 
             for (int i = 0; i < 2; i++) {
-                Double randomCumulativeValue = Math.random();
+                Double randomCumulativeValue = RandomValues.returnRandomDouble();
                 boolean findParent = false;
                 for (int k = 1; k < this._population.size(); k++) {
                     if (randomCumulativeValue > this._population.get(k).get(this._countGenesOfChromosome + 2)) {
@@ -215,7 +207,7 @@ public class GeneticAlgorithm {
                 }
             }
 
-            Double crossoverProbability = Math.random();
+            Double crossoverProbability = RandomValues.returnRandomDouble();
             if (crossoverProbability <= this._crossoverRatio) {
                 // From 2 parants, produce 2 child
                 this.crossover(tempChromosomes.get(0), tempChromosomes.get(1));
@@ -235,7 +227,7 @@ public class GeneticAlgorithm {
                 Double gene = currentChromosome.get(j);
 
                 if (j < currentChromosome.size() - 3) {
-                    Double mutationProbability = Math.random();
+                    Double mutationProbability = RandomValues.returnRandomDouble();
 
                     if (mutationProbability <= this._mutationRatio) {
                         gene += gene * mutationProbability;
